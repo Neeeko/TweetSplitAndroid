@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         return tweetsList;
     }
 
-    // TODO: Code this function
+    // TODO: Code this function (see Trello)
     private void displayGeneratedTweets(ArrayList<String> tweetsList) {
         for (int i = 0; i < tweetsList.size(); i++) {
             Log.d("Test", tweetsList.get(i));
