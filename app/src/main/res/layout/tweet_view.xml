@@ -24,15 +24,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/copyButton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:drawableLeft="?android:attr/actionModeCopyDrawable"
-            android:drawableStart="?android:attr/actionModeCopyDrawable"
-            android:text="@string/copy_button"
-            android:textSize="14sp"/>
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/tweetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawableLeft="@drawable/ic_twitter_logo_blue"
+                android:drawableStart="@drawable/ic_twitter_logo_blue"
+                android:text="@string/tweet_button"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/copyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawableLeft="?android:attr/actionModeCopyDrawable"
+                android:drawableStart="?android:attr/actionModeCopyDrawable"
+                android:text="@string/copy_button"
+                android:textSize="14sp"/>
+
+            </LinearLayout>
 
     </LinearLayout>
 

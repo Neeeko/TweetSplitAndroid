@@ -4,7 +4,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,16 +17,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neekoentertainment.tweetsplit.R;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.Fabric;
+
 public class MainActivity extends AppCompatActivity {
+
+    //TODO: NOT THE PRODUCTION KEYS :)
+    private static final String CONSUMER_KEY = "trololol";
+    private static final String CONSUMER_SECRET = "trololo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        initFabric();
     }
 
     private void init() {
@@ -37,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!editText.getText().toString().isEmpty() && !editText.getText().toString().trim().equals("")) {
-                    ArrayList<String> tweetsList = generateTweets(editText.getText().toString(), checkBox.isChecked());
+                if (!editText.getText().toString().isEmpty() &&
+                        !editText.getText().toString().trim().equals("")) {
+                    ArrayList<String> tweetsList = generateTweets(editText.getText().toString(),
+                            checkBox.isChecked());
                     displayGeneratedTweets(tweetsList);
                 } else {
                     editText.setError(getString(R.string.empty_tweet_error));
@@ -47,10 +58,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initFabric() {
+        TwitterAuthConfig authConfig =  new TwitterAuthConfig(CONSUMER_KEY, CONSUMER_SECRET);
+        Fabric.with(this, new TwitterCore(authConfig), new TweetComposer());
+    }
+
     private ArrayList<String> generateTweets(String tweetsContent, boolean addTweetIndicator) {
         ArrayList<String> tweetsList = new ArrayList<>();
 
         int tweetLength = addTweetIndicator ? 136 : 140;
+
+        tweetsContent = tweetsContent.replace('\n', ' ');
 
         // Splits the String each 136 chars. A Tweet is 136 long because if the user wants to add
         // a tweet counter at the beginning of each tweets.
@@ -67,35 +85,12 @@ public class MainActivity extends AppCompatActivity {
         return tweetsList;
     }
 
-    private void displayGeneratedTweets(final ArrayList<String> tweetsList) {
+    private void displayGeneratedTweets(ArrayList<String> tweetsList) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        Button tweetButton = (Button) findViewById(R.id.postTweetsButton);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         TweetsAdapter tweetsAdapter = new TweetsAdapter(tweetsList, this);
         recyclerView.setAdapter(tweetsAdapter);
-        tweetButton.setVisibility(View.VISIBLE);
-        tweetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*String token = "2416131656-KjedhWCVr4YMiJWwAlbnHNG1jv2jzkWZLjS7U8j";
-                String secret = "v4EvxyMjh0z1rqQ5qGDfHwkj8EgOTL1LOrj3rloCgIbN6";
-                AccessToken a = new AccessToken(token,secret);
-                Twitter twitter = new TwitterFactory().getInstance();
-                twitter.setOAuthConsumer("GxmbrAND02fs9c34sjRJP4rRh",
-                        "cdyDCd5Qt5bstcQwQygRYMrrV2mrzT30HeDMP8AfcmYKz4JgOW");
-                twitter.setOAuthAccessToken(a);
-                try {
-                    for (int i = 0; i < tweetsList.size(); i++) {
-                        twitter.updateStatus(tweetsList.get(i));
-                    }
-                } catch (TwitterException e) {
-                    Log.e("TwitterError", e.getMessage());
-                }*/
-                Snackbar.make(findViewById(R.id.rootView), getString(R.string.posted_snackbar),
-                        Snackbar.LENGTH_LONG).show();
-            }
-        });
     }
 
     public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.TweetViewHolder> {
@@ -115,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final TweetsAdapter.TweetViewHolder holder, int position) {
+        public void onBindViewHolder(final TweetsAdapter.TweetViewHolder holder, final int position) {
             holder.tweetContent.setText(mTweetsList.get(position));
             holder.copyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -128,6 +123,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(mContext, getString(R.string.copy_toast), Toast.LENGTH_SHORT).show();
                 }
             });
+            holder.tweetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    postTweet(holder.getAdapterPosition());
+                }
+            });
         }
 
         @Override
@@ -135,15 +136,23 @@ public class MainActivity extends AppCompatActivity {
             return mTweetsList.size();
         }
 
+        private void postTweet(int position) {
+            TweetComposer.Builder builder = new TweetComposer.Builder(MainActivity.this)
+                    .text(mTweetsList.get(position));
+            builder.show();
+        }
+
         public class TweetViewHolder extends RecyclerView.ViewHolder {
 
             private TextView tweetContent;
             private Button copyButton;
+            private Button tweetButton;
 
             public TweetViewHolder(View itemView) {
                 super(itemView);
                 tweetContent = (TextView) itemView.findViewById(R.id.tweetContent);
                 copyButton = (Button) itemView.findViewById(R.id.copyButton);
+                tweetButton = (Button) itemView.findViewById(R.id.tweetButton);
             }
         }
     }
