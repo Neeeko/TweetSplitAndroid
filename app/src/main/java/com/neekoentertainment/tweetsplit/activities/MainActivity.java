@@ -28,8 +28,8 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends AppCompatActivity {
 
     //TODO: NOT THE PRODUCTION KEYS :)
-    private static final String CONSUMER_KEY = "trololol";
-    private static final String CONSUMER_SECRET = "trololo";
+    private static final String CONSUMER_KEY = "";
+    private static final String CONSUMER_SECRET = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

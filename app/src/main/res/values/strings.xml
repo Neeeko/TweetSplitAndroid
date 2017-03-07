@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TweetSplit</string>
     <string name="hint_content">Enter your tweet here…</string>
-    <string name="checkbox_counter">Add a counter of tweets at the beginning of each tweets</string>
+    <string name="checkbox_counter">Add a counter of tweets at the beginning of each Tweet</string>
     <string name="generate_button">Generate tweets!</string>
     <string name="empty_tweet_error">Your tweet can\'t be empty.</string>
     <string name="copy_button">Copy</string>
