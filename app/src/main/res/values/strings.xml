@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">TweetSplit</string>
     <string name="hint_content">Enter your tweet here…</string>
-    <string name="checkbox_counter">Add a counter of tweets at the beginning of each Tweet</string>
+    <string name="checkbox_counter">Add a counter of tweets at the beginning of each tweet</string>
     <string name="generate_button">Generate tweets!</string>
     <string name="empty_tweet_error">Your tweet can\'t be empty.</string>
     <string name="copy_button">Copy</string>
     <string name="tweet_button">Tweet</string>
     <string name="clipboard_label">Tweet Content</string>
     <string name="copy_toast">Tweet copied to clipboard</string>
-    <string name="tweet_success_snackbar">Tweets have been posted.</string>
-    <string name="tweet_error_snackbar">An error happened while posted your tweet.</string>
 </resources>

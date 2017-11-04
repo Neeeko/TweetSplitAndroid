@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TweetSplit</string>
+    <string name="hint_content">Tapez votre tweet ici…</string>
+    <string name="checkbox_counter">Ajouter un compteur au début de chaque Tweet</string>
+    <string name="generate_button">Générer les tweets !</string>
+    <string name="empty_tweet_error">Votre tweet ne peut pas être vide.</string>
+    <string name="copy_button">Copier</string>
+    <string name="tweet_button">Tweet</string>
+    <string name="clipboard_label">Tweet Content</string>
+    <string name="copy_toast">Tweet copié dans le presse-papier</string>
+</resources>

@@ -22,6 +22,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -40,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        final EditText editText = (EditText) findViewById(R.id.editText);
-        final Button button = (Button) findViewById(R.id.generateTweetsButton);
-        final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+        final EditText editText = findViewById(R.id.editText);
+        final Button button = findViewById(R.id.generateTweetsButton);
+        final CheckBox checkBox = findViewById(R.id.checkBox);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,17 +65,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<String> generateTweets(String tweetsContent, boolean addTweetIndicator) {
-        ArrayList<String> tweetsList = new ArrayList<>();
+        ArrayList<String> tweetsList;
 
         int tweetLength = addTweetIndicator ? 136 : 140;
 
         tweetsContent = tweetsContent.replace('\n', ' ');
 
-        // Splits the String each 136 chars. A Tweet is 136 long because if the user wants to add
+        // Splits the String each 136 or 140 chars. A Tweet is 136 long if the user wants to add
         // a tweet counter at the beginning of each tweets.
-        for (int i = 0; i < tweetsContent.length(); i += tweetLength) {
-            tweetsList.add(tweetsContent.substring(i, Math.min(tweetsContent.length(), i + tweetLength)));
-        }
+        tweetsList = handleTweetContent(tweetsContent, tweetLength);
+
 
         if (addTweetIndicator) {
             for (int j = 0; j < tweetsList.size(); j++) {
@@ -85,8 +85,43 @@ public class MainActivity extends AppCompatActivity {
         return tweetsList;
     }
 
+    private ArrayList<String> handleTweetContent(String tweetContent, int tweetLength) {
+        ArrayList<String> tweetsList = new ArrayList<>();
+        // Only one tweet necessary
+        if (tweetContent.length() <= tweetLength) {
+            tweetsList.add(tweetContent);
+        } else {
+            // We split the tweet content into words that we then try to concatenate to get the
+            // required length
+            ArrayList<String> wordsList = new ArrayList<>(Arrays.asList(tweetContent.split("\\s+")));
+            StringBuilder tweet = new StringBuilder();
+
+            // A word longer than the tweet length isn't considered valid
+            for (int i = 0; i < wordsList.size(); i++) {
+                if (wordsList.get(i).length() > tweetLength) {
+                    wordsList.remove(i);
+                }
+            }
+
+            int i = 0;
+            while (i < wordsList.size()) {
+                if (wordsList.get(i).length() + tweet.length() <= tweetLength) {
+                    tweet.append(" ").append(wordsList.get(i));
+                    i++;
+                } else {
+                    tweetsList.add(tweet.toString().trim());
+                    tweet = new StringBuilder();
+                }
+            }
+            if (!tweet.toString().isEmpty()) {
+                tweetsList.add(tweet.toString().trim());
+            }
+        }
+        return tweetsList;
+    }
+
     private void displayGeneratedTweets(ArrayList<String> tweetsList) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         TweetsAdapter tweetsAdapter = new TweetsAdapter(tweetsList, this);
@@ -150,9 +185,9 @@ public class MainActivity extends AppCompatActivity {
 
             public TweetViewHolder(View itemView) {
                 super(itemView);
-                tweetContent = (TextView) itemView.findViewById(R.id.tweetContent);
-                copyButton = (Button) itemView.findViewById(R.id.copyButton);
-                tweetButton = (Button) itemView.findViewById(R.id.tweetButton);
+                tweetContent = itemView.findViewById(R.id.tweetContent);
+                copyButton = itemView.findViewById(R.id.copyButton);
+                tweetButton = itemView.findViewById(R.id.tweetButton);
             }
         }
     }
