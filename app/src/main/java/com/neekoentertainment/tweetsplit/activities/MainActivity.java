@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> generateTweets(String tweetsContent, boolean addTweetIndicator) {
         ArrayList<String> tweetsList;
 
-        int tweetLength = addTweetIndicator ? 136 : 140;
+        int tweetLength = addTweetIndicator ? 276 : 280;
 
         tweetsContent = tweetsContent.replace('\n', ' ');
 
